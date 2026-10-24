@@ -8,17 +8,18 @@
 
 ## 安装与使用
 
-运行所需文件只有 [skills/clear-communication/SKILL.md](skills/clear-communication/SKILL.md)。把 `clear-communication` 目录安装到 Agent 支持的技能目录即可，README、许可证和测试文件不需要进入运行目录。
-
-在 Codex 中，可以请求：
+技能采用 [Agent Skills](https://agentskills.io/specification) 格式。把下面这段话发给你使用的 Agent，让它自行读取并安装：
 
 ```text
-从 https://github.com/devillee/clear-communication-skill 安装 skills/clear-communication 到我的全局技能目录。
+请阅读 https://github.com/devillee/clear-communication-skill ，
+将其中的 clear-communication 技能安装到你支持的技能目录。
 ```
 
-Codex 的默认全局目录是 `~/.codex/skills`；设置了 `CODEX_HOME` 时使用其下的 `skills` 目录。其他 Agent 按各自的技能加载方式安装。
+技能入口是 [skills/clear-communication/SKILL.md](skills/clear-communication/SKILL.md)。安装时保留 `clear-communication/SKILL.md` 的目录结构，具体位置由 Agent 按自身的技能加载方式确定。
 
-使用时可以明确要求“使用 clear-communication 完成当前任务”。技能只有加载后才能影响生成；是否自动选用、能否持续应用，取决于宿主和模型，不能保证覆盖每次输出。
+如果只想在当前会话使用，也可以直接让 Agent 读取这个 `SKILL.md`，并按其中要求完成当前任务，无需先安装。
+
+安装后，可以明确要求“使用 clear-communication 完成当前任务”。是否自动选用、能否在后续会话中持续应用，取决于 Agent 的技能加载机制和模型。
 
 ## 测试
 
