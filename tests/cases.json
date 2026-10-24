@@ -1,0 +1,97 @@
+[
+  {
+    "id": "T01",
+    "category": "日常回答",
+    "prompt": "只根据通知回答：我今天周三16:45到窗口，还没有取号，今天还能取号办理吗？\n通知：窗口周一至周五09:00–17:00开放，16:30停止取号；已取号的人即使排到17:00以后，窗口也会办理。"
+  },
+  {
+    "id": "T02",
+    "category": "进度汇报",
+    "prompt": "用户问“现在进展怎样了？”。请根据下面的记录写一段中途进度回复。\n记录：总共12项检查；已经运行8项，7项通过，1项失败。失败项是断网后的重试。剩余4项尚未运行。失败原因尚未定位。下一步准备读取这项失败的日志。目前没有完成时间估计。"
+  },
+  {
+    "id": "T03",
+    "category": "技术解释",
+    "prompt": "这个项目里，为什么关掉连接后还要注销回调？请给刚接手项目的同事解释。\n项目已知机制：消息分发器会一直持有已经注册的回调。close()只关闭连接，不从分发器移除回调。新连接的事件仍会发给所有已注册回调。unregister()可阻止后续事件继续入队，但不能撤销已入队的回调。每条事件携带sessionId，回调可用它判断事件是否属于当前会话。"
+  },
+  {
+    "id": "T04",
+    "category": "故障分析",
+    "prompt": "用户说“所以肯定是手机先断开导致应用退出吧？”请根据证据回复，并原样保留这两行日志。\n日志：\n10:02:01.020 AppProcess: EXIT_REQUESTED\n10:02:01.080 Session: CLOSED\n上下文：这是唯一一次抓到的记录，来自设备侧；没有手机侧日志，也没有说明是谁请求应用退出。没有其他因果证据。"
+  },
+  {
+    "id": "T05",
+    "category": "代码审查",
+    "prompt": "这段代码有问题吗？给一条最重要的审查意见，不修改代码。这里tmp和target都是同一文件系统上的Path；调用前target是有效的旧配置，tmp内容尚未验证。replace会用tmp覆盖target。valid_config只检查内容是否合法，不会回滚文件。\n片段：\ndef install_config(tmp, target):\n    tmp.replace(target)\n    if not valid_config(target):\n        raise ValueError(\"invalid config\")"
+  },
+  {
+    "id": "T06",
+    "category": "文档",
+    "prompt": "请把这些已定规则写成给调用方看的重试说明，不改变规则。\n只有timeout_ms > 5000且retry_enabled == true时，客户端才允许重试；timeout_ms <= 5000时不重试。即使满足上面的条件，遇到认证失败或用户取消也不得重试。最多重试2次，不含首次请求，因此总请求次数最多3次。每次重试前固定等待2秒。"
+  },
+  {
+    "id": "T07",
+    "category": "故障结论改写",
+    "prompt": "请把下面这段故障结论写得自然清楚，保留所有信息：\n“针对A机型在2.4版本下的连接稳定性进行了20次验证，其中成功17次、失败3次，失败案例均出现在重启之后。目前尚不能确定重启行为与失败之间存在因果关系，对于B机型的适用性暂未开展验证。”"
+  },
+  {
+    "id": "T08",
+    "category": "数字、范围与决策",
+    "prompt": "经理问“性能变好了，是不是可以全量上线？”请根据以下结果回复。\n结果：改动前后各测1000次，只测了命中本地缓存的请求。p95耗时从120 ms降至95 ms；失败率从0.8%升至1.1%。未测试未命中缓存的请求，也未做长时间稳定性测试。没有预先约定的上线阈值。"
+  },
+  {
+    "id": "T09",
+    "category": "缺失主体和因果",
+    "prompt": "把这句话说清楚，不要替我补事实：\n“服务断开后它没有清理，所以这次会失败。”\n这是全部上下文，没有说明“它”指谁、没有清理什么，也没有提供失败的验证结果。"
+  },
+  {
+    "id": "T10",
+    "category": "自然语气",
+    "prompt": "把下面的维护通知写得自然一点，保持专业，保留信息：\n“兹通知，本周五18:00起暂停报表导出，预计19:00恢复。维护期间查看已有报表不受影响，尚未完成的导出任务不会自动继续，用户须在恢复后重新提交。”"
+  },
+  {
+    "id": "T11",
+    "category": "代码、日志、引文保护",
+    "prompt": "写一段给同事的说明，解释目前还不能确定请求是否到达服务端，并原样附上下面的代码、日志、引文和命令。仅从这些材料无法确定请求是否到达服务端，不要添加原因。\n代码：\nif (!ready || retryCount >= 3) return false;\n日志：\n2026-10-24T10:02:01.080Z timeout_ms=5000 retry=false code=E_TIMEOUT\n引文：\nThe request may not have reached the server.\n命令：\nadb logcat -v threadtime -s 'Demo:I' '*:S'"
+  },
+  {
+    "id": "T12",
+    "category": "机器格式",
+    "prompt": "只把JSON的message值改得自然易懂，保留原意。不改其他字段的值或类型，不添加字段。只输出JSON，不加解释或Markdown围栏。\n{\"status\":\"unknown\",\"retryable\":false,\"attempts\":0,\"message\":\"当前针对请求结果的确认尚未形成充分依据。\"}"
+  },
+  {
+    "id": "T13",
+    "category": "技能语言与标准格式",
+    "prompt": "用户问：“Skills用中文还是英文？应该是有标准格式吧？”请直接回答。\n已核对的资料：Agent Skills规范要求一个技能目录至少包含SKILL.md；文件开头是YAML frontmatter，后面是Markdown正文。name和description是必填字段；name长度1–64字符，使用小写字母、数字和连字符，不能以连字符开头或结尾、不能出现连续连字符，并与目录名一致；description为1–1024字符，描述能力与适用时机。规范没有要求description或正文必须用英文；正文没有规定的固定格式。规范允许其他辅助文件，但并不要求平台专用配置。该规范描述文件结构，不能证明所有Agent都会加载技能。参考：https://agentskills.io/specification 。请只使用这些材料，不自行查网。"
+  },
+  {
+    "id": "T14",
+    "category": "修复汇报：行动与验证范围",
+    "prompt": "可以告诉测试同事这个问题已经修复了吗？请根据当前记录说明，不发送消息。\n记录：已在接收回调处增加会话标识检查；构建成功；17项单元测试通过，覆盖事件过滤逻辑。未运行设备端断开重连测试，尚未确认原来的复现步骤是否消失。"
+  },
+  {
+    "id": "T15",
+    "category": "文档压缩：保留理由与限制",
+    "prompt": "这段说明太啰嗦了，请改得简洁自然，保留原意：\n“为了充分保障配置导出过程中的数据一致性，用户应先暂停同步，再导出配置。这是因为同步线程可能在导出过程中改写同一文件，导致导出的配置混有两个版本。暂停同步只影响自动同步，用户仍须停止手动编辑。导出完成后可以恢复同步。”"
+  },
+  {
+    "id": "T16",
+    "category": "机制解释：完成标记与后续处理",
+    "prompt": "上传进度已经100%，但文件还不能下载，是不是文件坏了？请只根据这个系统的机制和记录解释。\n机制：上传界面的100%只表示客户端已经把文件数据发送完。服务端收到数据后，还要校验文件，再建立索引；只有索引就绪后，文件才可下载。当前记录中只有RECEIVED，没有后续状态记录，也没有校验失败记录。"
+  },
+  {
+    "id": "T17",
+    "category": "提交消息：中文仓库与验证范围",
+    "prompt": "为当前变更写一条 commit 消息，只输出提交消息，不执行提交。仓库使用中文标题和可选正文，不采用 Conventional Commits。\n实际改动：事件处理函数在调用 deliver(event) 前新增检查；当 event.sessionId 与 currentSessionId 不一致时直接返回，避免把旧会话事件交给当前会话处理。没有改动重连调度。\n验证记录：17项事件过滤逻辑的单元测试通过；设备端断开重连测试未运行。"
+  },
+  {
+    "id": "T18",
+    "category": "提交消息：英文格式与文档范围",
+    "prompt": "Write only a one-line commit subject. This repository uses Conventional Commits and English messages. Do not execute a commit.\nActual diff: only docs/retry.md changed. The documented timeout requirement was corrected from timeout_ms >= 5000 to timeout_ms > 5000. Runtime code did not change. Documentation link checking passed; runtime tests were not run."
+  },
+  {
+    "id": "T19",
+    "category": "提交消息：夸大草稿与真实改动",
+    "prompt": "给当前变更写一条中文 commit 消息，只输出提交消息，不执行提交。仓库没有类型前缀要求。\n拟议标题是“修复全部断连问题并通过实机验收”。但实际 diff 只在断开回调日志中增加 sessionId 和时间戳，便于后续排查；没有修改连接处理流程，没有定位根因，也没有运行测试或实机验收。请以实际变更为准。"
+  }
+]
