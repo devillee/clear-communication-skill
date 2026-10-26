@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Check test coverage, protected source text, and the T12 JSON contract.
+"""Check coverage, protected text, the T12 JSON contract, and plain-text length.
 
 This does not evaluate naturalness or semantic equivalence of prose.
 Run from any directory: python3 check_outputs.py
@@ -24,12 +24,17 @@ def read_json(path):
     return json.loads(path.read_text(encoding="utf-8"), object_pairs_hook=unique_object)
 
 
-def check(path, expected_ids, protected):
+def check(path, expected_ids, protected, max_characters=None):
     answers = read_json(path)
     if not isinstance(answers, dict) or set(answers) != expected_ids:
         raise ValueError("Answer IDs do not match the case IDs")
     if any(not isinstance(v, str) or not v.strip() for v in answers.values()):
         raise ValueError("Each case needs a nonempty answer string")
+
+    for case_id, limit in (max_characters or {}).items():
+        count = len("".join(answers[case_id].split()))
+        if count > limit:
+            raise ValueError(f"{case_id}: {count} non-whitespace characters exceeds {limit}")
 
     for case_id, literals in protected.items():
         for literal in literals:
@@ -60,12 +65,12 @@ def main():
     failed = False
     for path in paths:
         try:
-            check(path, expected_ids, criteria["protected_literals"])
+            check(path, expected_ids, criteria["protected_literals"], criteria.get("max_characters"))
         except (OSError, ValueError, TypeError, KeyError) as exc:
             print(f"FAIL {path.name}: {exc}")
             failed = True
         else:
-            print(f"PASS {path.name}: complete cases; protected text; JSON contract")
+            print(f"PASS {path.name}: complete cases; protected text; JSON contract; length limits")
     print("Prose meaning and readability require a separate review.")
     return 1 if failed else 0
 
